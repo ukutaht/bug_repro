@@ -18,5 +18,6 @@ defmodule BugReproWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    live "/repro", ReproLive
   end
 end
