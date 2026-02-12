@@ -71,13 +71,14 @@ defmodule BugReproWeb.ReproLive do
   def thing(assigns) do
     ~H"""
     <div id={@id} phx-hook=".Thing">
-      <.custom_button data-thing>{render_slot(@inner_block)}</.custom_button>
+      <.custom_elem data-thing>{render_slot(@inner_block)}</.custom_elem>
     </div>
     <script :type={Phoenix.LiveView.ColocatedHook} name=".Thing">
       export default {
         mounted() {
           const thingId = this.el.id + 'set-by-hook'
-          this.el.querySelector('[data-thing]').id = thingId
+          const thingEl = this.el.querySelector('[data-thing]')
+          this.js().setAttribute(thingEl, 'id', thingId)
         }
       }
     </script>
@@ -88,11 +89,11 @@ defmodule BugReproWeb.ReproLive do
   attr :rest, :global
   slot :inner_block, required: true
 
-  defp custom_button(assigns) do
+  defp custom_elem(assigns) do
     ~H"""
-    <button type="button" {@rest}>
+    <div {@rest}>
       {render_slot(@inner_block)}
-    </button>
+    </div>
     """
   end
 end
